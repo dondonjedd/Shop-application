@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/screens/products_screen.dart';
+import 'package:shop_app/screens/single_product_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
               .colorScheme
               .copyWith(primary: Colors.blue, secondary: Colors.brown[200])),
       home: ProductScreen(),
+      routes:  {SingleProductScreen.routeName:(ctx)=>SingleProductScreen()},
     );
   }
 }
