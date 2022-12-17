@@ -4,7 +4,7 @@ import 'package:shop_app/widgets/product_item.dart';
 
 class ProductScreen extends StatelessWidget {
   ProductScreen({super.key});
-  List<Product> availableProducts = [
+  final List<Product> availableProducts = [
     Product(
       id: 'p1',
       title: 'Red Shirt',
