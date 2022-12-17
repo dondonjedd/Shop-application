@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
             fontFamily: "Lato",
             colorScheme: Theme.of(context)
                 .colorScheme
-                .copyWith(primary: Colors.blue, secondary: Colors.brown[200])),
+                .copyWith(primary: Colors.blue, secondary: Colors.brown[300])),
         home: const ProductScreen(),
         routes: {
           SingleProductScreen.routeName: (ctx) => const SingleProductScreen()
