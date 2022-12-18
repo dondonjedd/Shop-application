@@ -47,9 +47,10 @@ class _ProductScreenState extends State<ProductScreen> {
                 ];
               }),
           Consumer<Cart>(
-              builder: (_, cart, child) => BadgeCart(
-                  value: cart.itemsLength,
-                  child: const Icon(Icons.shopping_cart)))
+            builder: (_, cart, ch) =>
+                BadgeCart(value: cart.itemsLength, child: ch!),
+            child: const Icon(Icons.shopping_cart),
+          )
         ],
       ),
       body: ProductsGrid(showFavorites: _showFavorites),
