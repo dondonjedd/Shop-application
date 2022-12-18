@@ -8,13 +8,13 @@ class CartItem {
 }
 
 class Cart with ChangeNotifier {
-  late Map<String, CartItem> _items;
+  final Map<String, CartItem> _items = {};
 
   Map<String, CartItem> get items {
     return {..._items};
   }
 
-  void addItem(Product product, int quantity) {
+  void addItem(Product product) {
     if (_items.containsKey(product.id)) {
       _items.update(
           product.id,
@@ -24,7 +24,13 @@ class Cart with ChangeNotifier {
               ));
     } else {
       _items.putIfAbsent(
-          product.id, () => CartItem(product: product, quantity: quantity));
+          product.id, () => CartItem(product: product, quantity: 1));
     }
+
+    notifyListeners();
+  }
+
+  String get itemsLength {
+    return _items.length.toString();
   }
 }
