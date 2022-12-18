@@ -30,7 +30,16 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
-  String get itemsLength {
-    return _items.length.toString();
+  int get itemsLength {
+    return _items.length;
+  }
+
+  double get getTotalAmount {
+    double totalAmount = 0.0;
+    _items.forEach((key, item) {
+      totalAmount = totalAmount + item.quantity * item.product.price;
+    });
+
+    return totalAmount;
   }
 }

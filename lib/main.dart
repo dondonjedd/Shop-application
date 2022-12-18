@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/prov_products.dart';
+import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/screens/products_screen.dart';
 import 'package:shop_app/screens/single_product_screen.dart';
 
@@ -29,7 +30,8 @@ class MyApp extends StatelessWidget {
                 .copyWith(primary: Colors.blue, secondary: Colors.brown[300])),
         home: const ProductScreen(),
         routes: {
-          SingleProductScreen.routeName: (ctx) => const SingleProductScreen()
+          SingleProductScreen.routeName: (ctx) => const SingleProductScreen(),
+          CartScreen.routeName: (ctx) => const CartScreen(),
         },
       ),
     );
