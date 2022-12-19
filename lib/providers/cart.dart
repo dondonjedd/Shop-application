@@ -42,4 +42,9 @@ class Cart with ChangeNotifier {
 
     return totalAmount;
   }
+
+  void removeItem(String prodID) {
+    _items.remove(prodID);
+    notifyListeners();
+  }
 }
