@@ -35,7 +35,7 @@ class SingleProductScreen extends StatelessWidget {
           ),
           Text(
             "RM${product.price}",
-            style: const TextStyle(color: Colors.grey, fontSize: 10),
+            style: const TextStyle(color: Colors.grey, fontSize: 20),
           ),
           const SizedBox(
             height: 10,
