@@ -21,7 +21,7 @@ class _OrderItemState extends State<OrderItem> {
       child: Column(
         children: [
           ListTile(
-            title: Text("Total: RM ${widget.order.amount}"),
+            title: Text("Total: RM ${widget.order.amount.toStringAsFixed(2)}"),
             subtitle: Text(
                 "Ordered on ${DateFormat("dd/MM/yyyy").format(widget.order.dateTime)} at ${DateFormat("hh:mm a").format(widget.order.dateTime)}"),
             trailing: IconButton(
@@ -38,8 +38,10 @@ class _OrderItemState extends State<OrderItem> {
               children: [
                 const Divider(),
                 SizedBox(
+                  // padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
                   height: min(widget.order.products.length * 20.0 + 100, 180),
                   child: ListView.builder(
+                      itemCount: widget.order.products.length,
                       itemBuilder: ((ctx, i) => ListTile(
                             leading: CircleAvatar(
                                 backgroundColor: Colors.transparent,
