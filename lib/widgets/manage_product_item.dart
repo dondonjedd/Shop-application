@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/screens/edt_product_screen.dart';
 
 class ManageProductItem extends StatelessWidget {
   final String title;
@@ -16,7 +17,9 @@ class ManageProductItem extends StatelessWidget {
         child: Row(
           children: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(EditProductScreen.routeName);
+              },
               icon: const Icon(Icons.edit),
               color: Theme.of(context).primaryColor,
             ),
