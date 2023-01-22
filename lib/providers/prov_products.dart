@@ -49,4 +49,10 @@ class Products with ChangeNotifier {
   getById(String id) {
     return _items.firstWhere((prod) => prod.id == id);
   }
+
+  void addProduct(Product newProduct) {
+    newProduct = newProduct.copyWith(id: DateTime.now().toString());
+    _items.add(newProduct);
+    notifyListeners();
+  }
 }
