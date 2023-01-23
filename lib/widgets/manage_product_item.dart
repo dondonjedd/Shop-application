@@ -8,7 +8,10 @@ class ManageProductItem extends StatelessWidget {
   final String title;
   final String imageUrl;
   const ManageProductItem(
-      {super.key, required this.title, required this.imageUrl, required this.id});
+      {super.key,
+      required this.title,
+      required this.imageUrl,
+      required this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +24,38 @@ class ManageProductItem extends StatelessWidget {
           children: [
             IconButton(
               onPressed: () {
-                Navigator.of(context).pushNamed(EditProductScreen.routeName,arguments: id);
+                Navigator.of(context)
+                    .pushNamed(EditProductScreen.routeName, arguments: id);
               },
               icon: const Icon(Icons.edit),
               color: Theme.of(context).primaryColor,
             ),
             IconButton(
-              onPressed: () {
-                Provider.of<Products>(context,listen: false).deleteProduct(id);
+              onPressed: () async {
+                final res = await showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: const Text("Are you sure"),
+                          content:
+                              const Text("Do you want to remove this product?"),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                },
+                                child: const Text("Yes")),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                },
+                                child: const Text("No"))
+                          ],
+                        ));
+
+                if (res) {
+                  Provider.of<Products>(context, listen: false)
+                      .deleteProduct(id);
+                }
               },
               icon: const Icon(Icons.delete),
               color: Theme.of(context).errorColor,
