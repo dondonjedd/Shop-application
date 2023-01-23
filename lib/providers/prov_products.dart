@@ -55,4 +55,11 @@ class Products with ChangeNotifier {
     _items.add(newProduct);
     notifyListeners();
   }
+
+  void updateProduct(Product newProduct) {
+    final prodIndex =
+        _items.indexWhere((element) => element.id == newProduct.id);
+    _items[prodIndex] = newProduct;
+    notifyListeners();
+  }
 }

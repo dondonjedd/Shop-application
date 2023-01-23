@@ -89,7 +89,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _formkey.currentState?.save();
-    Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+
+    if (_editedProduct.id == "") {
+      Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+    }else{
+      Provider.of<Products>(context, listen: false).updateProduct(_editedProduct);
+    }
+
     Navigator.of(context).pop();
   }
 
