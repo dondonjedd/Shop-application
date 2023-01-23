@@ -18,11 +18,41 @@ class _EditProductScreenState extends State<EditProductScreen> {
   var _editedProduct =
       Product(id: "", title: "", description: "", imageURL: "", price: 0);
 
+  var _initValues = {
+    'title': "",
+    'description': "",
+    'imageURL': "",
+    'price': 0
+  };
+
   @override
   void initState() {
     // TODO: implement initState
     _imageURLFocusNode.addListener(_updateImageURL);
     super.initState();
+  }
+
+  var _isInit = true;
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if (_isInit) {
+      if (ModalRoute.of(context)!.settings.arguments != null) {
+        final productID = ModalRoute.of(context)!.settings.arguments as String;
+        _editedProduct =
+            Provider.of<Products>(context, listen: false).getById(productID);
+        _initValues = {
+          'title': _editedProduct.title,
+          'description': _editedProduct.description,
+          'imageURL': _editedProduct.imageURL,
+          'price': _editedProduct.price.toString()
+        };
+        _imageURLController.text = _editedProduct.imageURL;
+      }
+
+      _isInit = false;
+    }
+    super.didChangeDependencies();
   }
 
   @override
@@ -82,6 +112,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             child: ListView(
               children: [
                 TextFormField(
+                  initialValue: _initValues['title'] as String,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "Please Enter Title";
@@ -95,6 +126,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   },
                 ),
                 TextFormField(
+                  initialValue: _initValues['price'].toString(),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "Please Enter Price";
@@ -116,6 +148,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   },
                 ),
                 TextFormField(
+                  initialValue: _initValues['description'] as String,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "Please Enter Description";
