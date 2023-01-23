@@ -73,11 +73,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
           !_imageURLController.text.startsWith("https")) {
         return;
       }
-      if (!_imageURLController.text.endsWith(".png") &&
-          !_imageURLController.text.endsWith("jpg") &&
-          !_imageURLController.text.endsWith("jpeg")) {
-        return;
-      }
 
       setState(() {});
     }
@@ -92,8 +87,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
     if (_editedProduct.id == "") {
       Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
-    }else{
-      Provider.of<Products>(context, listen: false).updateProduct(_editedProduct);
+    } else {
+      Provider.of<Products>(context, listen: false)
+          .updateProduct(_editedProduct);
     }
 
     Navigator.of(context).pop();
@@ -195,11 +191,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               !value.startsWith("https")) {
                             return "Please Enter A Valid URL";
                           }
-                          if (!value.endsWith(".png") &&
-                              !value.endsWith("jpg") &&
-                              !value.endsWith("jpeg")) {
-                            return "Please Enter A Valid Image URL";
-                          }
+
                           return null;
                         },
                         decoration:
