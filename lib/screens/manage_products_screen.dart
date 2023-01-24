@@ -24,19 +24,25 @@ class ManageProductsScreen extends StatelessWidget {
               icon: const Icon(Icons.add))
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: ListView.builder(
-          itemCount: productProvider.items.length,
-          itemBuilder: (_, i) => Column(
-            children: [
-              ManageProductItem(
-                id: productProvider.items[i].id,
-                title: productProvider.items[i].title,
-                imageUrl: productProvider.items[i].imageURL,
-              ),
-              const Divider()
-            ],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Provider.of<Products>(context, listen: false)
+              .fetchAndSetProducts();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: ListView.builder(
+            itemCount: productProvider.items.length,
+            itemBuilder: (_, i) => Column(
+              children: [
+                ManageProductItem(
+                  id: productProvider.items[i].id,
+                  title: productProvider.items[i].title,
+                  imageUrl: productProvider.items[i].imageURL,
+                ),
+                const Divider()
+              ],
+            ),
           ),
         ),
       ),
