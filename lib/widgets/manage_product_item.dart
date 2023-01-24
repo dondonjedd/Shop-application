@@ -15,6 +15,7 @@ class ManageProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffold = ScaffoldMessenger.of(context);
     return ListTile(
       title: Text(title),
       leading: CircleAvatar(backgroundImage: NetworkImage(imageUrl)),
@@ -53,8 +54,19 @@ class ManageProductItem extends StatelessWidget {
                         ));
 
                 if (res) {
-                  Provider.of<Products>(context, listen: false)
-                      .deleteProduct(id);
+                  try {
+                    await Provider.of<Products>(context, listen: false)
+                        .deleteProduct(id);
+                  } catch (e) {
+                    scaffold.hideCurrentSnackBar();
+                    scaffold.showSnackBar(SnackBar(
+                      content: const Text(
+                        "Unable to delete product",
+                        textAlign: TextAlign.center,
+                      ),
+                      backgroundColor: Theme.of(context).errorColor,
+                    ));
+                  }
                 }
               },
               icon: const Icon(Icons.delete),
