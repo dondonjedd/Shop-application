@@ -8,6 +8,8 @@ class ProductsGrid extends StatelessWidget {
 
   const ProductsGrid({super.key, required this.showFavorites});
 
+  
+
   @override
   Widget build(BuildContext context) {
     final productsProvider = Provider.of<Products>(context);

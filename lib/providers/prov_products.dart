@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'product.dart';
 
 class Products with ChangeNotifier {
-  final List<Product> _items = [
+  List<Product> _items = [
     Product(
       id: 'p1',
       title: 'Red Shirt',
@@ -39,6 +39,34 @@ class Products with ChangeNotifier {
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
   ];
+
+  Future<void> fetchAndSetProducts() async {
+    _items.clear();
+    final url = Uri.https(
+        'flutter-shop-app-858de-default-rtdb.firebaseio.com', '/products.json');
+    try {
+      final response = await http.get(url);
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      final List<Product> loadedProducts = [];
+
+      print(extractedData);
+      extractedData.forEach((prodId, data) {
+        loadedProducts.add(Product(
+            id: prodId,
+            title: data['title'],
+            description: data['description'],
+            imageURL: data['imageURL'],
+            price: data['price'],
+            isFavorite: data['isFavorite']));
+      });
+      _items = loadedProducts;
+      notifyListeners();
+      print("user Notified");
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
+  }
 
   List<Product> get items {
     return [..._items];
