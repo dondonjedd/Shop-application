@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop_app/providers/product.dart';
 import '../utils.dart';
 import 'cart.dart';
 
@@ -19,7 +20,43 @@ class OrderItem {
 }
 
 class Orders with ChangeNotifier {
-  final List<OrderItem> _orders = [];
+  List<OrderItem> _orders = [];
+
+  Future<void> fetchAndSetOrders() async {
+    _orders.clear();
+    final url = Uri.https(urlDomain, '/orders.json');
+    try {
+      final response = await http.get(url);
+      print("Orders fetched");
+      final extractedData = json.decode(response.body) as Map<String, dynamic>?;
+      final List<OrderItem> loadedOrders = [];
+      // print(extractedData);
+
+      extractedData?.forEach((orderId, data) {
+        loadedOrders.add(OrderItem(
+          id: orderId,
+          amount: data['amount'],
+          dateTime: DateTime.parse(data['dateTime']),
+          products: (data['products']).map<CartItem>((item) {
+            return CartItem(
+                product: Product(
+                    id: item['product']['id'],
+                    title: item['product']['title'],
+                    description: item['product']['description'],
+                    imageURL: item['product']['imageURL'],
+                    price: item['product']['price']),
+                quantity: item['quantity']);
+          }).toList(),
+        ));
+      });
+      _orders = loadedOrders;
+      notifyListeners();
+      print("Orders Set");
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
+  }
 
   List<OrderItem> get orders {
     return _orders;

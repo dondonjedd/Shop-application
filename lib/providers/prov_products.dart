@@ -62,7 +62,7 @@ class Products with ChangeNotifier {
       });
       _items = loadedProducts;
       notifyListeners();
-      print("user Notified");
+      print("Product Set");
     } catch (error) {
       print(error);
       rethrow;

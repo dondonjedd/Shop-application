@@ -5,9 +5,34 @@ import 'package:shop_app/widgets/app_drawer.dart';
 
 import '../widgets/order_item.dart';
 
-class OrdersScreen extends StatelessWidget {
+class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
   static const routeName = "/orders";
+
+  @override
+  State<OrdersScreen> createState() => _OrdersScreenState();
+}
+
+class _OrdersScreenState extends State<OrdersScreen> {
+  var _isInit = false;
+  var _isLoading = false;
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if (!_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Orders>(context, listen: false)
+          .fetchAndSetOrders()
+          .then((value) => setState(() {
+                _isLoading = false;
+              }));
+      _isInit = true;
+    }
+
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +40,13 @@ class OrdersScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text("Your Orders")),
       drawer: const AppDrawer(),
-      body: ListView.builder(
-        itemBuilder: (ctx, i) => OrderItem(order: ordersProvider.orders[i]),
-        itemCount: ordersProvider.orders.length,
-      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemBuilder: (ctx, i) =>
+                  OrderItem(order: ordersProvider.orders[i]),
+              itemCount: ordersProvider.orders.length,
+            ),
     );
   }
 }
