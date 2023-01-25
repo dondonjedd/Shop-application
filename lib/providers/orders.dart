@@ -27,6 +27,7 @@ class Orders with ChangeNotifier {
 
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     final url = Uri.https(urlDomain, '/orders.json');
+    final timestamp = DateTime.now();
     try {
       final response = await http.post(url,
           body: json.encode({
@@ -44,7 +45,7 @@ class Orders with ChangeNotifier {
                       'quantity': cartItem.quantity
                     })
                 .toList(),
-            'dateTime': DateTime.now().toIso8601String(),
+            'dateTime': timestamp.toIso8601String(),
           }));
 
       _orders.insert(
@@ -53,7 +54,7 @@ class Orders with ChangeNotifier {
               id: json.decode(response.body)['name'],
               amount: total,
               products: cartProducts,
-              dateTime: DateTime.now()));
+              dateTime: timestamp));
 
       notifyListeners();
     } catch (error) {
