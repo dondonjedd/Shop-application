@@ -47,11 +47,14 @@ class CartScreen extends StatelessWidget {
                     width: 10,
                   ),
                   TextButton(
-                    onPressed: () {
-                      Provider.of<Orders>(context, listen: false).addOrder(
-                          cart.items.values.toList(), cart.getTotalAmount);
-                      cart.clear();
-                    },
+                    onPressed: cart.getTotalAmount <= 0
+                        ? null
+                        : () {
+                            Provider.of<Orders>(context, listen: false)
+                                .addOrder(cart.items.values.toList(),
+                                    cart.getTotalAmount);
+                            cart.clear();
+                          },
                     style: ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(
                             Theme.of(context).colorScheme.primary)),
