@@ -50,8 +50,11 @@ class Products with ChangeNotifier {
       print("Product fetched");
       final extractedData = json.decode(response.body) as Map<String, dynamic>?;
       final List<Product> loadedProducts = [];
+      if (extractedData == null) {
+        return;
+      }
 
-      extractedData?.forEach((prodId, data) {
+      extractedData.forEach((prodId, data) {
         loadedProducts.add(Product(
             id: prodId,
             title: data['title'],

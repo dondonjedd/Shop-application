@@ -31,8 +31,11 @@ class Orders with ChangeNotifier {
       final extractedData = json.decode(response.body) as Map<String, dynamic>?;
       final List<OrderItem> loadedOrders = [];
       // print(extractedData);
+      if (extractedData == null) {
+        return;
+      }
 
-      extractedData?.forEach((orderId, data) {
+      extractedData.forEach((orderId, data) {
         loadedOrders.add(OrderItem(
           id: orderId,
           amount: data['amount'],
