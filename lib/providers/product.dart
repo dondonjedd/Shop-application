@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../utils.dart';
+
 class Product with ChangeNotifier {
   final String id;
   final String title;
@@ -30,12 +32,11 @@ class Product with ChangeNotifier {
     notifyListeners();
 
     try {
-      final url = Uri.https(
-          'flutter-shop-app-858de-default-rtdb.firebaseio.com',
-          '/products/$id.json');
+      final url = Uri.https(urlDomain, '/products/$id.json');
+      print("Changing Fav Status");
       final response =
           await http.patch(url, body: json.encode({'isFavorite': isFavorite}));
-      print(response.statusCode);
+      print("Fav Status Set");
       if (response.statusCode >= 400) {
         _setFavValue(oldStatus);
       }

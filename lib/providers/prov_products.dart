@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/models/http_exception.dart';
+import '../utils.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
@@ -43,8 +44,7 @@ class Products with ChangeNotifier {
 
   Future<void> fetchAndSetProducts() async {
     _items.clear();
-    final url = Uri.https(
-        'flutter-shop-app-858de-default-rtdb.firebaseio.com', '/products.json');
+    final url = Uri.https(urlDomain, '/products.json');
     try {
       final response = await http.get(url);
       print("Product fetched");
@@ -82,8 +82,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product newProduct) async {
-    final url = Uri.https(
-        'flutter-shop-app-858de-default-rtdb.firebaseio.com', '/products.json');
+    final url = Uri.https(urlDomain, '/products.json');
     try {
       final response = await http.post(url,
           body: json.encode({
@@ -107,8 +106,7 @@ class Products with ChangeNotifier {
     final prodIndex =
         _items.indexWhere((element) => element.id == newProduct.id);
 
-    final url = Uri.https('flutter-shop-app-858de-default-rtdb.firebaseio.com',
-        '/products/${newProduct.id}.json');
+    final url = Uri.https(urlDomain, '/products/${newProduct.id}.json');
 
     try {
       final response = await http.patch(url,
@@ -130,8 +128,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    final url = Uri.https('flutter-shop-app-858de-default-rtdb.firebaseio.com',
-        '/products/$id.json');
+    final url = Uri.https(urlDomain, '/products/$id.json');
     final existingProductIndex =
         _items.indexWhere((element) => element.id == id);
     Product? existingProduct = _items[existingProductIndex];
