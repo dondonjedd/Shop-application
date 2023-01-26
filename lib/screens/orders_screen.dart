@@ -14,39 +14,43 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class _OrdersScreenState extends State<OrdersScreen> {
-  var _isInit = false;
-  var _isLoading = false;
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    if (!_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<Orders>(context, listen: false)
-          .fetchAndSetOrders()
-          .then((value) => setState(() {
-                _isLoading = false;
-              }));
-      _isInit = true;
-    }
+  late Future _ordersFuture;
+  Future _obtainOrdersFuture() {
+    return Provider.of<Orders>(context, listen: false).fetchAndSetOrders();
+  }
 
-    super.didChangeDependencies();
+  @override
+  void initState() {
+    // TODO: implement initState
+    _ordersFuture = _obtainOrdersFuture();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final ordersProvider = Provider.of<Orders>(context);
+    print("Bulding Orders");
     return Scaffold(
       appBar: AppBar(title: const Text("Your Orders")),
       drawer: const AppDrawer(),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemBuilder: (ctx, i) =>
-                  OrderItem(order: ordersProvider.orders[i]),
-              itemCount: ordersProvider.orders.length,
-            ),
+      body: FutureBuilder(
+          future: _ordersFuture,
+          builder: ((context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              if (snapshot.error != null) {
+                return const Center(
+                  child: Text("An Error Occured"),
+                );
+              }
+              return Consumer<Orders>(
+                  builder: ((context, orderData, child) => ListView.builder(
+                        itemBuilder: (ctx, i) =>
+                            OrderItem(order: orderData.orders[i]),
+                        itemCount: orderData.orders.length,
+                      )));
+            }
+          })),
     );
   }
 }
