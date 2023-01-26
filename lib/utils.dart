@@ -5,3 +5,6 @@ const webApiKey = 'AIzaSyAvfZ4d-sA951F6EERXcKLMn3-budjVek4';
 
 const signUpEmailPwEndPoint =
     "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=$webApiKey";
+
+const signInEmailPwEndPoint =
+    "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$webApiKey";
