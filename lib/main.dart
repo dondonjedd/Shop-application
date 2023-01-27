@@ -9,6 +9,7 @@ import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/screens/edt_product_screen.dart';
 import 'package:shop_app/screens/manage_products_screen.dart';
 import 'package:shop_app/screens/orders_screen.dart';
+import 'package:shop_app/screens/products_screen.dart';
 import 'package:shop_app/screens/single_product_screen.dart';
 
 void main() {
@@ -35,7 +36,9 @@ class MyApp extends StatelessWidget {
             colorScheme: Theme.of(context)
                 .colorScheme
                 .copyWith(primary: Colors.blue, secondary: Colors.brown[300])),
-        home: const AuthScreen(),
+        home: Consumer<Auth>(
+            builder: (context, auth, _) =>
+                auth.isAuth ? const ProductScreen() : const AuthScreen()),
         routes: {
           SingleProductScreen.routeName: (ctx) => const SingleProductScreen(),
           CartScreen.routeName: (ctx) => const CartScreen(),
