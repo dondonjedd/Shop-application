@@ -7,6 +7,9 @@ import '../utils.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
+  final String? authToken;
+  Products(this.authToken, this._items);
+
   List<Product> _items = [
     Product(
       id: 'p1',
@@ -44,7 +47,7 @@ class Products with ChangeNotifier {
 
   Future<void> fetchAndSetProducts() async {
     _items.clear();
-    final url = Uri.https(urlDomain, '/products.json');
+    final url = Uri.https(urlDomain, '/products.json', {'auth': '$authToken'});
     try {
       final response = await http.get(url);
       print("Product fetched");
