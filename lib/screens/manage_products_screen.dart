@@ -11,7 +11,7 @@ class ManageProductsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final productProvider = Provider.of<Products>(context);
+    print("building manage product screen");
     return Scaffold(
       drawer: const AppDrawer(),
       appBar: AppBar(
@@ -24,27 +24,36 @@ class ManageProductsScreen extends StatelessWidget {
               icon: const Icon(Icons.add))
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await Provider.of<Products>(context, listen: false)
-              .fetchAndSetProducts();
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: ListView.builder(
-            itemCount: productProvider.items.length,
-            itemBuilder: (_, i) => Column(
-              children: [
-                ManageProductItem(
-                  id: productProvider.items[i].id,
-                  title: productProvider.items[i].title,
-                  imageUrl: productProvider.items[i].imageURL,
-                ),
-                const Divider()
-              ],
-            ),
-          ),
-        ),
+      body: FutureBuilder(
+        future: Provider.of<Products>(context, listen: false)
+            .fetchAndSetProducts(true),
+        builder: (context, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : RefreshIndicator(
+                    onRefresh: () async {
+                      await Provider.of<Products>(context, listen: false)
+                          .fetchAndSetProducts(true);
+                    },
+                    child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Consumer<Products>(
+                            builder: ((ctx, productData, _) => ListView.builder(
+                                  itemCount: productData.items.length,
+                                  itemBuilder: (_, i) => Column(
+                                    children: [
+                                      ManageProductItem(
+                                        id: productData.items[i].id,
+                                        title: productData.items[i].title,
+                                        imageUrl: productData.items[i].imageURL,
+                                      ),
+                                      const Divider()
+                                    ],
+                                  ),
+                                )))),
+                  ),
       ),
     );
   }

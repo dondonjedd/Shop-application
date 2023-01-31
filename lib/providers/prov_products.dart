@@ -46,9 +46,22 @@ class Products with ChangeNotifier {
     ),
   ];
 
-  Future<void> fetchAndSetProducts() async {
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
     _items.clear();
-    final url = Uri.https(urlDomain, '/products.json', {'auth': '$authToken'});
+    Map<String, String> params;
+    if (filterByUser) {
+      params = <String, String>{
+        'auth': authToken!,
+        'orderBy': json.encode("creatorId"),
+        'equalTo': json.encode(userId),
+      };
+    } else {
+      params = <String, String>{
+        'auth': authToken!,
+      };
+    }
+
+    final url = Uri.https(urlDomain, '/products.json', params);
     final favUrl = Uri.https(
         urlDomain, '/userFavorites/$userId.json', {'auth': authToken});
     try {
@@ -102,6 +115,7 @@ class Products with ChangeNotifier {
             'imageURL': newProduct.imageURL,
             'price': newProduct.price,
             'isFavorite': newProduct.isFavorite,
+            'creatorId': userId,
           }));
 
       newProduct = newProduct.copyWith(id: json.decode(response.body)['name']);
