@@ -8,7 +8,8 @@ import 'product.dart';
 
 class Products with ChangeNotifier {
   final String? authToken;
-  Products(this.authToken, this._items);
+  final String? userId;
+  Products(this.authToken, this.userId, this._items);
 
   List<Product> _items = [
     Product(
@@ -48,6 +49,8 @@ class Products with ChangeNotifier {
   Future<void> fetchAndSetProducts() async {
     _items.clear();
     final url = Uri.https(urlDomain, '/products.json', {'auth': '$authToken'});
+    final favUrl = Uri.https(
+        urlDomain, '/userFavorites/$userId.json', {'auth': authToken});
     try {
       final response = await http.get(url);
       print("Product fetched");
@@ -56,7 +59,9 @@ class Products with ChangeNotifier {
       if (extractedData == null) {
         return;
       }
-
+      final favResponse = await http.get(favUrl);
+      print("Fav fetched");
+      final favData = json.decode(favResponse.body);
       extractedData.forEach((prodId, data) {
         loadedProducts.add(Product(
             id: prodId,
@@ -64,7 +69,7 @@ class Products with ChangeNotifier {
             description: data['description'],
             imageURL: data['imageURL'],
             price: data['price'],
-            isFavorite: data['isFavorite']));
+            isFavorite: favData == null ? false : favData[prodId] ?? false));
       });
       _items = loadedProducts;
       notifyListeners();
@@ -112,7 +117,8 @@ class Products with ChangeNotifier {
     final prodIndex =
         _items.indexWhere((element) => element.id == newProduct.id);
 
-    final url = Uri.https(urlDomain, '/products/${newProduct.id}.json', {'auth': '$authToken'});
+    final url = Uri.https(
+        urlDomain, '/products/${newProduct.id}.json', {'auth': '$authToken'});
 
     try {
       final response = await http.patch(url,
@@ -134,7 +140,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    final url = Uri.https(urlDomain, '/products/$id.json', {'auth': '$authToken'});
+    final url =
+        Uri.https(urlDomain, '/products/$id.json', {'auth': '$authToken'});
     final existingProductIndex =
         _items.indexWhere((element) => element.id == id);
     Product? existingProduct = _items[existingProductIndex];
