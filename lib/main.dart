@@ -32,7 +32,12 @@ class MyApp extends StatelessWidget {
               previousProducts == null ? [] : previousProducts.items),
         ),
         ChangeNotifierProvider(create: (ctx) => Cart()),
-        ChangeNotifierProvider(create: (ctx) => Orders()),
+        ChangeNotifierProxyProvider<Auth, Orders>(
+          create: (_) => Orders("",
+              []), //error here saying 3 positional arguments expected,but 0 found.
+          update: (ctx, auth, previousOrders) => Orders(
+              auth.token, previousOrders == null ? [] : previousOrders.orders),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
