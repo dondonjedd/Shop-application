@@ -15,8 +15,8 @@ class Auth with ChangeNotifier {
     return token != null;
   }
 
-  String get userId {
-    return _userId!;
+  String? get userId {
+    return _userId;
   }
 
   String? get token {
@@ -75,5 +75,12 @@ class Auth with ChangeNotifier {
     } catch (e) {
       rethrow;
     }
+  }
+
+  void logout() {
+    _token = null;
+    _userId = null;
+    _expiryDate = null;
+    notifyListeners();
   }
 }
