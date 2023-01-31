@@ -11,6 +11,7 @@ import 'package:shop_app/screens/manage_products_screen.dart';
 import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/screens/products_screen.dart';
 import 'package:shop_app/screens/single_product_screen.dart';
+import 'package:shop_app/widgets/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -53,8 +54,14 @@ class MyApp extends StatelessWidget {
                 .colorScheme
                 .copyWith(primary: Colors.blue, secondary: Colors.brown[300])),
         home: Consumer<Auth>(
-            builder: (context, auth, _) =>
-                auth.isAuth ? const ProductScreen() : const AuthScreen()),
+            builder: (context, auth, _) => auth.isAuth
+                ? const ProductScreen()
+                : FutureBuilder(
+                    future: auth.tryAutoLogin(),
+                    builder: (context, snapshot) =>
+                        snapshot.connectionState == ConnectionState.waiting
+                            ? SplashScreen()
+                            : const AuthScreen())),
         routes: {
           SingleProductScreen.routeName: (ctx) => const SingleProductScreen(),
           CartScreen.routeName: (ctx) => const CartScreen(),

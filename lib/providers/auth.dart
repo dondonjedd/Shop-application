@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/http_exception.dart';
 import '../utils.dart';
@@ -75,12 +76,42 @@ class Auth with ChangeNotifier {
           .add(Duration(seconds: int.parse(responseData['expiresIn'])));
       _autoLogout();
       notifyListeners();
+      final prefs = await SharedPreferences.getInstance();
+      final userData = json.encode({
+        'token': _token,
+        'userId': _userId,
+        'expiryDate': _expiryDate!.toIso8601String(),
+      });
+      prefs.setString("userData", userData);
     } catch (e) {
       rethrow;
     }
   }
 
-  void logout() {
+  Future<bool> tryAutoLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    print("trying auto login");
+    if (!prefs.containsKey('userData')) {
+      print("no userData set");
+      return false;
+    }
+    final extractedUserData = prefs.getString('userData');
+    final userData = json.decode(extractedUserData!) as Map<String, dynamic>;
+    final expiryDate = DateTime.parse(userData['expiryDate']);
+
+    if (expiryDate.isBefore(DateTime.now())) {
+      print("token expired");
+      return false;
+    }
+    _token = userData['token'];
+    _userId = userData['userId'];
+    _expiryDate = expiryDate;
+    notifyListeners();
+    _autoLogout();
+    return true;
+  }
+
+  void logout() async {
     _token = null;
     _userId = null;
     _expiryDate = null;
@@ -89,6 +120,9 @@ class Auth with ChangeNotifier {
       _authTimer = null;
     }
     notifyListeners();
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 
   void _autoLogout() {
