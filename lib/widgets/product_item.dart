@@ -63,8 +63,12 @@ class ProductItem extends StatelessWidget {
               },
             ),
           ),
-          child: Image.network(
-            product.imageURL,
+          child: FadeInImage(
+            image: NetworkImage(
+              product.imageURL,
+            ),
+            placeholder:
+                const AssetImage('assets/images/product-placeholder.png'),
             fit: BoxFit.cover,
           ),
         ),
