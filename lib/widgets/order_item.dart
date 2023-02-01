@@ -39,24 +39,29 @@ class _OrderItemState extends State<OrderItem> {
                   },
                 ),
               ),
-              if (_expanded) const Divider(height: 0),
               if (_expanded)
                 AnimatedContainer(
                   // padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
                   height: _expanded
-                      ? min(widget.order.products.length * 60 + 20, 180)
+                      ? min(widget.order.products.length * 60 + 20, 150)
                       : 0,
                   duration: const Duration(milliseconds: 200),
                   child: ListView.builder(
                       itemCount: widget.order.products.length,
-                      itemBuilder: ((ctx, i) => ListTile(
-                            leading: CircleAvatar(
-                                backgroundColor: Colors.transparent,
-                                child: Image.network(
-                                    widget.order.products[i].product.imageURL)),
-                            title: Text(widget.order.products[i].product.title),
-                            subtitle: Text(
-                                "${widget.order.products[i].quantity} x RM${widget.order.products[i].product.price}"),
+                      itemBuilder: ((ctx, i) => Column(
+                            children: [
+                              const Divider(height: 0),
+                              ListTile(
+                                leading: CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    child: Image.network(widget
+                                        .order.products[i].product.imageURL)),
+                                title: Text(
+                                    widget.order.products[i].product.title),
+                                subtitle: Text(
+                                    "${widget.order.products[i].quantity} x RM${widget.order.products[i].product.price}"),
+                              ),
+                            ],
                           ))),
                 )
             ],
